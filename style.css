@@ -8,26 +8,33 @@ body {
     padding: 10px;
 }
 
-#about {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
+div {
+    display: block;
+}
+
+#profile {
+    float: right;
 }
 
 #profile_pic {
     width: 225px;
     height: 225px;
-    flex: none;
 }
 
-#profile_details {
-    flex: none;
-}
+@media only screen and (max-width: 480px) {
+    /* ensure image comes on top */
+    #profile {
+        float: none;
+    }
 
-@media only screen and (max-width: 600px) {
-    #about {
-        flex-direction: column-reverse;
+    /* center the image */
+    #profile_pic {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+
+    h1 {
+        text-align: center;
     }
 }
-  
