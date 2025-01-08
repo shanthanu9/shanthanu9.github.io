@@ -17,6 +17,7 @@ div {
 }
 
 #profile_pic {
+    margin-left: 10px;
     width: 225px;
     height: 225px;
 }
