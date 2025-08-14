@@ -12,6 +12,10 @@ div {
     display: block;
 }
 
+a {
+    text-decoration-line: none;
+}
+
 #profile {
     float: right;
 }
