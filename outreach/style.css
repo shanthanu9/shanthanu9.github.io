@@ -24,7 +24,7 @@
     margin: 0 auto;
     /* border: 2px solid black; */
     width: 90%;
-    height: 510px;
+    height: auto;
     cursor: pointer;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
@@ -32,7 +32,7 @@
     perspective: 1000px;
     justify-content: center;
     /* justify-content:start; */
-    align-items: normal;
+    align-items: center;
 }
 
 /* .door-container {
@@ -50,14 +50,19 @@ svg {
     overflow: visible;
 }
 
-/* Door leaf that rotates */
 .door {
+    width: 100%;
+    height: auto;
+}
+
+/* Door leaf that rotates */
+.door-leaf {
     transform-box: fill-box;
     transform-origin: left center;
     transition: transform 0.3s ease;
 }
 
-.door.open {
+.door-leaf.open {
     transform: rotateY(-75deg);
 }
 
