@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doors puzzle</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!--
+        ============================================================
+        DOOR INTERACTIVE AREA
+        ------------------------------------------------------------
+        - These area contains all the doors
+        ============================================================
+    -->
+    <div id="puzzleDescription">
+        <div id="puzzleIntructions">
+            <p>
+                Imagine 30 doors in a row, numbered <strong>1</strong> to <strong>30</strong>. At the start every door
+                is
+                <em>closed</em>.
+                Then you follow this routine:
+            </p>
+
+            <ol>
+                <li>On the <strong>1st</strong> pass, you toggle (open if closed, close if open) every door (every 1st
+                    door).
+                </li>
+                <li>On the <strong>2nd</strong> pass, you toggle every 2nd door (doors 2, 4, 6, ...).</li>
+                <li>On the <strong>3rd</strong> pass, you toggle every 3rd door (doors 3, 6, 9, ...).</li>
+                <li>You keep going like this: on pass <em>k</em> toggle every <em>k</em>-th door, up to pass 30.</li>
+            </ol>
+
+            <p><strong>Question:</strong> After the 30th pass, which doors are left <em>open</em>?</p>
+        </div>
+        <div id="puzzleButton">
+            <button id="resetDoorsBtn" class="door-btn">Reset doors!</button>
+            <button id="flipDoorsBtn" class="door-btn">Flip doors!</button>
+        </div>
+    </div>
+
+    <div class="door-container" id="doorContainer"></div>
+
+    <template id="door-template">
+        <!--
+            ============================================================
+            SVG DOOR ARTWORK
+            ------------------------------------------------------------
+            - The SVG is scalable and keeps its proportions via viewBox.
+            - All door visuals (leaf, frame, panels, knob) are vector shapes.
+            - The <g id="doorLeaf"> group represents the moving door.
+            - CSS rotates this group around the left edge (hinge side).
+            ============================================================
+        -->
+        <svg viewBox="0 0 200 320" width="110" height="170" id="door" xmlns="http://www.w3.org/2000/svg">
+
+            <!--
+            Wall background (just for aesthetics so the door doesn't float)
+            -->
+            <!-- <rect x="-20" y="-20" width="240" height="360" fill="#f4f5fb" /> -->
+
+            <!-- Floor shadow under the door -->
+            <!-- <ellipse cx="100" cy="315" rx="80" ry="12" fill="rgba(0,0,0,0.15)" /> -->
+
+            <!--
+                DOOR FRAME
+                ----------------------------------------------------------
+                Static frame surrounding the door.
+                Does NOT rotate — only the door leaf rotates.
+            -->
+            <rect x="10" y="5" width="180" height="310" rx="8" ry="8" fill="#d3d7e0" stroke="#a2a8b3"
+                stroke-width="4" />
+
+            <!--
+                ============================================================
+                DOOR LEAF (ROTATING GROUP)
+                ------------------------------------------------------------
+                - Everything inside this <g> is the actual door.
+                - This group rotates on click (handled via CSS + JS).
+                - transform-origin is set to "left center" in style.css
+                so the rotation simulates a real door hinge.
+                ============================================================
+            -->
+            <g id="doorLeaf" class="door">
+
+                <!-- Main solid rectangle of the door -->
+                <rect x="18" y="12" width="164" height="296" rx="6" ry="6" fill="#8b5a2b" stroke="#5a3a18"
+                    stroke-width="4" />
+
+                <!--
+                    TOP PANEL
+                    --------------------------------------------------------
+                    1 outer rectangle (frame)
+                    1 inner rectangle (inset panel)
+                -->
+                <rect x="32" y="28" width="136" height="90" rx="4" ry="4" fill="#a56b34" stroke="#6a441c"
+                    stroke-width="3" />
+                <rect x="42" y="38" width="116" height="70" rx="3" ry="3" fill="#bf8547" stroke="#845120"
+                    stroke-width="2" />
+
+                <!--
+                    MIDDLE PANEL
+                -->
+                <rect x="32" y="130" width="136" height="70" rx="4" ry="4" fill="#a56b34" stroke="#6a441c"
+                    stroke-width="3" />
+                <rect x="42" y="140" width="116" height="50" rx="3" ry="3" fill="#bf8547" stroke="#845120"
+                    stroke-width="2" />
+
+                <!--
+                    BOTTOM PANEL
+                -->
+                <rect x="32" y="210" width="136" height="80" rx="4" ry="4" fill="#a56b34" stroke="#6a441c"
+                    stroke-width="3" />
+                <rect x="42" y="220" width="116" height="60" rx="3" ry="3" fill="#bf8547" stroke="#845120"
+                    stroke-width="2" />
+
+                <!--
+                    DOOR KNOB
+                    --------------------------------------------------------
+                    - Simple circle for the knob.
+                    - Smaller highlight circle makes it look shiny/metallic.
+                -->
+                <circle cx="165" cy="170" r="7" fill="#f4d27a" stroke="#b9973f" stroke-width="2" />
+
+                <!-- Knob highlight -->
+                <circle cx="163" cy="168" r="3" fill="#fff4c4" opacity="0.8" />
+
+            </g>
+            <!-- END OF DOOR LEAF -->
+
+            <!--
+                DOOR NUMBER
+                --------------------------------------------------------
+                - Uses <text> (standard method)
+                - Easy to replace: change textContent
+                - Centered on door: (x=100, y=160)
+            -->
+            <text id="doorText" class="door-text" x="100" y="160"></text>
+        </svg>
+
+    </template>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+/* body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(#e9eef5, #c9d2e0);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+} */
+
+#puzzleDescription {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    align-items: center;
+}
+
+#puzzleButton {
+    display: flex;
+    gap: 16px;
+}
+
+.door-container {
+    width: fit-content;
+    margin: 0 auto;
+    /* border: 2px solid black; */
+    width: 90%;
+    height: 510px;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    /* flex-wrap: true; */
+    perspective: 1000px;
+    justify-content: center;
+    /* justify-content:start; */
+    align-items: normal;
+}
+
+/* .door-container {
+    width: 90%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* gap: 10px;
+    padding: 10px;
+    perspective: 1000px; 
+} */
+
+
+svg {
+    overflow: visible;
+}
+
+/* Door leaf that rotates */
+.door {
+    transform-box: fill-box;
+    transform-origin: left center;
+    transition: transform 0.3s ease;
+}
+
+.door.open {
+    transform: rotateY(-75deg);
+}
+
+.door-text {
+    text-anchor: middle;
+    dominant-baseline: middle;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 60px;
+    font-weight: 700;
+    fill: #fff4c4;
+    stroke: #6a441c;
+    stroke-width: 2;
+    opacity: 0.98;
+    pointer-events: none;
+}
+
+
+
+/* Nice hover */
+/* .door-container:hover {
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25));
+} */
+
+.door-btn {
+    display: block;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 600;
+    background: #8b5a2b;
+    /* main door color */
+    color: #fff4c4;
+    /* same light tone as door knob highlight */
+    border: 2px solid #5a3a18;
+    /* same dark stroke as door panels */
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+    /* subtle depth */
+}
+
+.door-btn:hover {
+    background: #a56b34;
+    /* lighter door panel color */
+    border-color: #6a441c;
+    /* lighter frame shade */
+}
+
+.door-btn:active {
+    background: #6a441c;
+    /* darker pressed color */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transform: translateY(1px);
+}
