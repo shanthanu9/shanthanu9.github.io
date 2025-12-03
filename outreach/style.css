@@ -14,9 +14,11 @@
     align-items: center;
 }
 
-#puzzleButton {
-    display: flex;
+#puzzleController {
+    display: grid;
     gap: 16px;
+    justify-items: center;
+    font-size: 1.3rem;
 }
 
 .door-container {
@@ -28,23 +30,10 @@
     cursor: pointer;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    /* flex-wrap: true; */
     perspective: 1000px;
     justify-content: center;
-    /* justify-content:start; */
     align-items: center;
 }
-
-/* .door-container {
-    width: 90%;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* gap: 10px;
-    padding: 10px;
-    perspective: 1000px; 
-} */
-
 
 svg {
     overflow: visible;
@@ -78,8 +67,6 @@ svg {
     opacity: 0.98;
     pointer-events: none;
 }
-
-
 
 /* Nice hover */
 /* .door-container:hover {
@@ -116,4 +103,41 @@ svg {
     /* darker pressed color */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
     transform: translateY(1px);
+}
+
+button.icon-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  margin: 4px;
+  cursor: pointer;
+  border-radius: 6px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background-color 0.15s ease;
+}
+
+button.icon-btn img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* Hover effect */
+button.icon-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Pressed effect */
+button.icon-btn:active {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Keyboard focus ring */
+button.icon-btn:focus-visible {
+  outline: 2px solid #4a90e2;
+  outline-offset: 2px;
 }

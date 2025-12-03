@@ -11,14 +11,6 @@
 </head>
 
 <body>
-
-    <!--
-        ============================================================
-        DOOR INTERACTIVE AREA
-        ------------------------------------------------------------
-        - These area contains all the doors
-        ============================================================
-    -->
     <div id="puzzleDescription">
         <div id="puzzleIntructions">
             <p>
@@ -39,14 +31,54 @@
 
             <p><strong>Question:</strong> After the 30th pass, which doors are left <em>open</em>?</p>
         </div>
-        <div id="puzzleButton">
-            <button id="resetDoorsBtn" class="door-btn">Reset doors!</button>
-            <button id="flipDoorsBtn" class="door-btn">Flip doors!</button>
+        <div id="puzzleController">
+            <!-- <button id="flipDoorsBtn" class="door-btn">Flip doors!</button> -->
+            <div id="inputFieldContainer">
+                <label for="no-of-doos"><strong>No. of doors:</strong> </label>
+                <input type="text" id="noOfDoors" size="10" placeholder="10">
+                <button id="submitButton" onclick="handleSubmit()"><strong>Submit!</strong></button>
+            </div>
+            <div id="mediaController">
+                <button onclick="handlePlay()" class="icon-btn">
+                    <img src="assets/play.svg" alt="Play" width="24" height="24">
+                </button>
+
+                <button onclick="handlePause()" class="icon-btn">
+                    <img src="assets/pause.svg" alt="Pause" width="24" height="24">
+                </button>
+
+                <button onclick="handleStepForward()" class="icon-btn">
+                    <img src="assets/step_forward.svg" alt="Step Forward" width="24" height="24">
+                </button>
+
+                <button onclick="handleStepBack()" class="icon-btn">
+                    <img src="assets/step_back.svg" alt="Step Back" width="24" height="24">
+                </button>
+
+                <button onclick="handleResetAll()" class="icon-btn">
+                    <img src="assets/reset.svg" alt="Reset" width="24" height="24">
+                </button>
+            </div>
         </div>
     </div>
 
+    <!--
+        ============================================================
+        DOOR INTERACTIVE AREA
+        ------------------------------------------------------------
+        - These area contains all the doors
+        - The doors will be added in script.js
+        ============================================================
+    -->
     <div class="door-container" id="doorContainer"></div>
 
+    <!-- 
+        The door artwork is inside a template tag. This will not be
+        rendered by default by html. This door artwork inside the
+        template tag will be used by script.js to create multiple
+        doors. These doors will be added in "doorContainer" div tag
+        above.
+    -->
     <template id="door-template">
         <!--
             ============================================================

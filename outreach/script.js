@@ -2,73 +2,266 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-/**
- * Returns DOM element for door
- * @param {number} doorNumber 
- * @returns {[DOM, DOM]} DOM element for door
- */
-function createDoorDOM(doorNumber) {
-    doorTemplate = document.getElementById("door-template");
-    const cloneDoorTemplate = doorTemplate.content.cloneNode(true);
+class Door {
+    constructor(doorNumber) {
+        this.doorNumber = doorNumber;
 
-    const door = cloneDoorTemplate.getElementById("door");
-    door.id = `door${doorNumber}`;
-    const doorLeaf = door.getElementById("doorLeaf");
-    doorLeaf.id = `doorLeaf${doorNumber}`;
-    const doorText = door.getElementById("doorText");
-    doorText.textContent = `${doorNumber}`;
+        // Create door DOM from template in HTML
+        const doorTemplate = document.getElementById("door-template");
+        const cloneDoorTemplate = doorTemplate.content.cloneNode(true);
 
-    door.addEventListener("click", () => {
-        doorLeaf.classList.toggle("open");
-    });
+        const door = cloneDoorTemplate.getElementById("door");
+        door.id = `door${doorNumber}`;
+        const doorLeaf = door.getElementById("doorLeaf");
+        doorLeaf.id = `doorLeaf${doorNumber}`;
+        const doorText = door.getElementById("doorText");
+        doorText.textContent = `${doorNumber}`;
 
-    return door;
+        // On click, open/close door
+        door.addEventListener("click", () => {
+            doorLeaf.classList.toggle("open");
+        });
+
+        this._doorDOM = door;
+        this._doorState = "closed"; // can be open or closed
+    }
+
+    get doorDOM() {
+        return this._doorDOM;
+    }
+
+    get doorState() {
+        return this._doorState;
+    }
+
+    toggle() {
+        if (this.doorState === "open") {
+            this._doorState = "closed";
+        }
+        else if (this.doorState === "closed") {
+            this._doorState = "open";
+        }
+        else {
+            throw "Door state is something other than open and closed!"
+        }
+        this.doorDOM.dispatchEvent(new MouseEvent("click"));
+    }
 }
 
-function getDoorDOM(doorNumber) {
-    // const container = document.getElementById("doorContainer");
-    const door = document.getElementById(`door${doorNumber}`);
-    return door;
+class DoorContainer {
+    #doorContainerDOM = document.getElementById("doorContainer");
+
+    constructor(numberOfDoors) {
+        this._numberOfDoors = numberOfDoors;
+        this._doors = []
+        for (let i = 1; i <= this.numberOfDoors; i++) {
+            this._doors.push(new Door(i));
+        }
+    }
+
+    get doors() {
+        return this._doors;
+    }
+
+    get numberOfDoors() {
+        return this._numberOfDoors;
+    }
+
+    buildDoorsInDOM() {
+        // Remove any old doors
+        this.#doorContainerDOM.innerHTML = "";
+
+        for (let i = 1; i <= this.numberOfDoors; i++) {
+            this.#doorContainerDOM.appendChild(this.doors[i - 1].doorDOM);
+        }
+    }
+
+    toggleDoor(doorIndex) {
+        this.doors[doorIndex - 1].toggle();
+    }
 }
 
-// Very very bad practice, global variables!
-let stopFlipDoors = false;
+class DoorMediaController {
+    constructor(doorController) {
+        this._doorContainer = doorController;
+        this.#setDoorCounts();
+        this._isPauseState = true;
+    }
 
-async function flipDoors() {
-    for (let i = 1; i <= 30; i++) {
-        for (let j = i; j <= 30; j += i) {
-            if (stopFlipDoors) return;
-            const door = getDoorDOM(j);
-            door.dispatchEvent(new MouseEvent("click"));
+    #setDoorCounts() {
+        this._skipDoors = 1;
+        this._currentDoor = 1;
+    }
+
+    get doorContainer() {
+        return this._doorContainer;
+    }
+
+    // set doorContainer(doorContainer) {
+    //     this._doorContainer = doorContainer;
+    //     this.#setDoorCounts();
+    // }
+
+    async play() {
+        this._isPauseState = false;
+        while (this._isPauseState === false) {
+            let isStepForwardNotTerminated = this.stepForward();
+            if (!isStepForwardNotTerminated) {
+                break;
+            }
             await sleep(500);
         }
     }
-}
 
-async function resetDoors() {
-    stopFlipDoors = true;
-
-    const container = document.getElementById("doorContainer");
-    container.innerHTML = "";
-
-    for (let i = 1; i <= 30; i++) {
-        // Create a door
-        door = createDoorDOM(i);
-        container.appendChild(door);
+    pause() {
+        this._isPauseState = true;
     }
 
-    await sleep(500);
-    stopFlipDoors = false;
+    stepForward() {
+        if (this._skipDoors > this.doorContainer.numberOfDoors) {
+            return false;
+        }
+
+        this.doorContainer.toggleDoor(this._currentDoor);
+        this._currentDoor += this._skipDoors;
+
+        if (this._currentDoor > this.doorContainer.numberOfDoors) {
+            this._skipDoors += 1;
+            this._currentDoor = this._skipDoors;
+        }
+        return true;
+    }
+
+    stepBack() {
+        if (this._currentDoor === 1 && this._skipDoors === 1) {
+            return false;
+        }
+
+        this._currentDoor -= this._skipDoors;
+
+        if (this._currentDoor < 1) {
+            this._skipDoors -= 1;
+            this._currentDoor = Math.floor(this.doorContainer.numberOfDoors / this._skipDoors) * this._skipDoors;
+        }
+
+        this.doorContainer.toggleDoor(this._currentDoor);
+
+        return true;
+    }
+
+    resetAll() {
+        this._isPauseState = true;
+        let numberOfDoors = this.doorContainer.numberOfDoors;
+        this._doorContainer = new DoorContainer(numberOfDoors);
+        this.doorContainer.buildDoorsInDOM();
+        this.#setDoorCounts();
+    }
 }
 
-resetDoors();
+// By default add 10 doors
+// All functions will edit the single global variable doorMediaController
+let doorContainer = new DoorContainer(10);
+let doorMediaController = new DoorMediaController(doorContainer);
+doorContainer.buildDoorsInDOM();
 
-const flipDoorButton = document.getElementById("flipDoorsBtn");
-flipDoorButton.addEventListener("click", () => {
-    flipDoors();
-});
 
-const resetDoorsBtn = document.getElementById("resetDoorsBtn");
-resetDoorsBtn.addEventListener("click", () => {
-    resetDoors();
-});
+function handleSubmit() {
+    const numberOfDoors = document.getElementById("noOfDoors").value;
+    doorContainer = new DoorContainer(numberOfDoors);
+    doorMediaController = new DoorMediaController(doorContainer);
+    doorMediaController.resetAll();
+}
+
+async function handlePlay() {
+    doorMediaController.play();
+}
+
+function handlePause() {
+    doorMediaController.pause();
+}
+
+function handleStepForward() {
+    doorMediaController.stepForward();
+}
+
+function handleStepBack() {
+    doorMediaController.stepBack();
+}
+
+function handleResetAll() {
+    doorMediaController.resetAll();
+}
+
+
+// ==================================
+
+// /**
+//  * Returns DOM element for door
+//  * @param {number} doorNumber
+//  * @returns {[DOM, DOM]} DOM element for door
+//  */
+// function createDoorDOM(doorNumber) {
+//     doorTemplate = document.getElementById("door-template");
+//     const cloneDoorTemplate = doorTemplate.content.cloneNode(true);
+
+//     const door = cloneDoorTemplate.getElementById("door");
+//     door.id = `door${doorNumber}`;
+//     const doorLeaf = door.getElementById("doorLeaf");
+//     doorLeaf.id = `doorLeaf${doorNumber}`;
+//     const doorText = door.getElementById("doorText");
+//     doorText.textContent = `${doorNumber}`;
+
+//     door.addEventListener("click", () => {
+//         doorLeaf.classList.toggle("open");
+//     });
+
+//     return door;
+// }
+
+// function getDoorDOM(doorNumber) {
+//     // const container = document.getElementById("doorContainer");
+//     const door = document.getElementById(`door${doorNumber}`);
+//     return door;
+// }
+
+// // Very very bad practice, global variables!
+// let stopFlipDoors = false;
+
+// async function flipDoors() {
+//     for (let i = 1; i <= 30; i++) {
+//         for (let j = i; j <= 30; j += i) {
+//             if (stopFlipDoors) return;
+//             const door = getDoorDOM(j);
+//             door.dispatchEvent(new MouseEvent("click"));
+//             await sleep(500);
+//         }
+//     }
+// }
+
+// async function resetDoors() {
+//     stopFlipDoors = true;
+
+//     const container = document.getElementById("doorContainer");
+//     container.innerHTML = "";
+
+//     for (let i = 1; i <= 30; i++) {
+//         // Create a door
+//         door = createDoorDOM(i);
+//         container.appendChild(door);
+//     }
+
+//     await sleep(500);
+//     stopFlipDoors = false;
+// }
+
+// resetDoors();
+
+// const flipDoorButton = document.getElementById("flipDoorsBtn");
+// flipDoorButton.addEventListener("click", () => {
+//     flipDoors();
+// });
+
+// const resetDoorsBtn = document.getElementById("resetDoorsBtn");
+// resetDoorsBtn.addEventListener("click", () => {
+//     resetDoors();
+// });
