@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Two-player Grid Game</title>
+
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<!-- favicon -->
+<link rel="icon" type="image/x-icon" href="../../assets/profile.jpg">
+
+<body>
+
+    <div class="panel">
+        <h1>Two-player grid game</h1>
+        <div class="controls">
+            <label>
+                Rows:
+                <input id="rowsInput" type="number" min="2" max="12" value="6" />
+            </label>
+            <label>
+                Columns:
+                <input id="colsInput" type="number" min="2" max="12" value="6" />
+            </label>
+            <button id="newBtn">New Game</button>
+            <button id="undoBtn" class="secondary" title="Undo last move">Undo</button>
+            <button id="highlightBtn" class="secondary" title="Highlight diagonal squares">Highlight</button>
+        </div>
+
+        <div class="status">
+            <div id="currentPlayer" class="player-pill pill-a">Player A's turn</div>
+            <div id="message">Click a highlighted square.</div>
+        </div>
+
+        <div class="legend">
+            <ul style="display: flex; gap: 1rem; list-style: none; padding: 0; margin: 0;">
+                <li><strong>Start:</strong> bottom-left</li>
+                <li><strong>Goal:</strong> top-right</li>
+                <li><strong>Move:</strong> right OR up any number of squares</li>
+            </ul>
+        </div>
+
+        <div class="footer-note">Click any cell to attempt a move. Illegal targets are ignored.</div>
+    </div>
+
+    <div class="board-wrap" id="boardPanel">
+        <div id="grid" class="grid"></div>
+    </div>
+
+    <!-- Load JS -->
+    <script src="game.js"></script>
+</body>
+
+</html>
