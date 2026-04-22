@@ -158,9 +158,9 @@ class DoorMediaController {
     }
 }
 
-// By default add 10 doors
+// By default add 30 doors
 // All functions will edit the single global variable doorMediaController
-let doorContainer = new DoorContainer(10);
+let doorContainer = new DoorContainer(30);
 let doorMediaController = new DoorMediaController(doorContainer);
 doorContainer.buildDoorsInDOM();
 

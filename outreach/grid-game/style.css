@@ -114,6 +114,11 @@ button.secondary {
   transition: background 0.15s ease, box-shadow 0.15s ease;
 }
 
+.cell.end {
+  background: rgba(170,120,255,0.25);
+  box-shadow: inset 0 0 0 2px rgba(130,80,220,0.50);
+}
+
 .cell:hover { transform: translateY(-3px); }
 
 .coord {

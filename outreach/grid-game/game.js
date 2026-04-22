@@ -3,7 +3,7 @@ const rowsInput = document.getElementById('rowsInput');
 const colsInput = document.getElementById('colsInput');
 const newBtn = document.getElementById('newBtn');
 const undoBtn = document.getElementById('undoBtn');
-const highlightBtn = document.getElementById('highlightBtn');
+const hintBtn = document.getElementById('hintBtn');
 const currentPlayerEl = document.getElementById('currentPlayer');
 const messageEl = document.getElementById('message');
 
@@ -34,6 +34,12 @@ function createGrid(r, c) {
       // coord.className = 'coord';
       // coord.textContent = `${row},${col}`;
       // cell.appendChild(coord);
+
+      
+      // Specially denote end cell
+      if (row === 0 && col === cols - 1) {
+        cell.classList.add("end");
+      }
 
       cell.addEventListener('click', () => onCellClick(row, col, cell));
       gridEl.appendChild(cell);
@@ -165,7 +171,7 @@ newBtn.addEventListener('click', () => {
 });
 
 /* -------------- HIGHLIGHT -------------- */
-highlightBtn.addEventListener('click', () => {
+hintBtn.addEventListener('click', () => {
   highlightDiagonalEntries();
 });
 
